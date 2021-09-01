@@ -1,12 +1,27 @@
-#include <unistd.h>
-#include"processpoll.hpp"
+#include<sys/types.h>
 #include<sys/socket.h>
 #include<netinet/in.h>
+#include<arpa/inet.h>
+#include<assert.h>
+#include<stdio.h>
+#include<unistd.h>
+#include<errno.h>
+#include<string.h>
+#include<fcntl.h>
+#include<stdlib.h>
+#include<sys/epoll.h>
+#include<signal.h>
+#include<sys/wait.h>
+#include<sys/stat.h>
+#include"processpoll.hpp"
+
+
+
 class conn_cgi{
 public:
-    conn_cgi();
-    ~conn_cgi();
-    void init(int epfd,int connfd,,const sockaddr_in&addr)
+    conn_cgi(){}
+    ~conn_cgi(){}
+    void init(int epfd,int connfd,const sockaddr_in&addr)
     {
         epfd=epfd;
         connfd==connfd;
@@ -21,12 +36,12 @@ public:
             ret=recv(connfd,buf+recv_idx,BUF_SIZE-1-recv_idx,0);
             if((ret<0)&&(errno!=EAGAIN))
             {
-                removefd(efpd,connfd);
+                removefd(epfd,connfd);
                 break;
             }
             else if(ret==0)
             {
-                removefd(efpd,connfd);
+                removefd(epfd,connfd);
                 break;
             }
             else
@@ -81,7 +96,7 @@ public:
 private:
     static const  int BUF_SIZE=1024;
     char buf[BUF_SIZE];
-    static int efpd;
+    static int epfd;
     int connfd;
     sockaddr_in clnt_addr;
     int recv_idx;
@@ -96,6 +111,11 @@ int main(int argc,char*argv[])
         printf("usage error!\n");
         return 1;
     }
+    if(argc!=2)
+    {
+        printf("use error!");
+        return 1;
+    }
     struct sockaddr_in addr;
     memset(&addr,0,sizeof(addr));
     addr.sin_addr.s_addr=htonl(INADDR_ANY);
@@ -103,9 +123,9 @@ int main(int argc,char*argv[])
     addr.sin_port=htons(atoi(argv[1]));
 
     int sock=socket(PF_INET,SOCK_STREAM,0);
-    assert(sock1=-1);
+    assert(sock!=-1);
 
-    int ret=bind(sock,(sockaddr*)&addr,sizeof(addr));
+    int ret=bind(sock,(struct sockaddr*)&addr,sizeof(addr));
     assert(ret!=-1);
 
     ret=listen(sock,5);
