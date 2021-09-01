@@ -34,7 +34,7 @@ class processpoll{
 public:
     ~processpoll();
     void run();
-    static processpoll<T>* create(int epfd);
+    static processpoll<T>* create(int epfd,int process_num=8);
 private:
     const int MAX_PROCESS=1024;
     const int MAX_EVENTS=1024;
@@ -49,7 +49,7 @@ private:
     int epfd;
     int m_idx;
     int user_num;
-    processpoll(int listenfd,int epfd);
+    processpoll(int listenfd,int process_num=8);
     process *m_process;
     void siginit();
     bool m_stop=false;
@@ -93,8 +93,8 @@ static void addfd(int epfd,int fd)
     epoll_event event;
     event.data.fd=fd;
     event.events=EPOLLIN|EPOLLET;
-    epoll_ctl(epfd,EPOLL_CTL_ADD,&event);
-    setnonblock(fd,);
+    epoll_ctl(epfd,EPOLL_CTL_ADD,fd,&event);
+    setnonblock(fd);
 }
 
 static void removefd(int epfd,int fd)
@@ -123,20 +123,18 @@ void processpoll<T>::siginit()
 }
 
 template<typename T>
-processpoll<T>::processpoll(int fd,int process_num=8):listen_fd(fd),m_idx(-1),process_num(process_num),m_stop(false)
+processpoll<T>::processpoll(int fd,int process_num):listen_fd(fd),m_idx(-1),process_num(process_num),m_stop(false)
 {
     assert(process_num>0 && process_num<=MAX_PROCESS);
     m_process=new process[process_num];
-    assert(m_process>=0);
+    assert(m_process);
 
     for(int i=0;i<process_num;++i)
     {
-        int ret=sockketpair(PF_UNIX,SOCK_STREAM,0,m_process[i].m_pipefd);
+        int ret=socketpair(PF_UNIX,SOCK_STREAM,0,m_process[i].m_pipefd);
         assert(ret==0);
         m_process[i].m_pid=fork();
-        assert(m_process[i].)
-        
-
+        assert(m_process[i].m_pid!=-1);
         if(m_process[i].m_pid==0)
         {
             m_idx=i;
@@ -144,14 +142,14 @@ processpoll<T>::processpoll(int fd,int process_num=8):listen_fd(fd),m_idx(-1),pr
             break;
         }else
         {
-            close(m_pipefd[i].m_pipefd[1]);
+            close(m_process[i].m_pipefd[1]);
             continue;
         }
     }
 }
 
 template<typename T>
-processpoll<T>* processpoll<T>::create(int fd,int process_num=8)
+processpoll<T>* processpoll<T>::create(int fd,int process_num)
 {
     if(poll)return poll;
     poll=new processpoll(fd,process_num);
@@ -175,11 +173,11 @@ void processpoll<T>::runparent()
 {
     siginit();
     epoll_event events[MAX_EVENTS];
-    int newconn=0
+    int newconn=0;
     int sub_process=0;
     while(!m_stop)
     {
-        int number=epoll_wait(epfd,events,MAX_EVENTS);
+        int number=epoll_wait(epfd,events,MAX_EVENTS,-1);
         if(number<0&&errno!=EINTR)
         {
             printf("EPOLL FILTURE!\n");
@@ -188,7 +186,7 @@ void processpoll<T>::runparent()
         for(int i=0;i<number;++i)
         {
             int waitfd=events[i].data.fd;
-            if((waitfd==listen_fd)&&(events[i].event*EPOLLIN))
+            if((waitfd==listen_fd)&&(events[i].events&EPOLLIN))
             {
                 int curprocess=sub_process;
                 do
@@ -204,10 +202,10 @@ void processpoll<T>::runparent()
                 }
                 sub_process=(curprocess+1)%MAX_PROCESS;
                 
-                send(m_process[PROCESS_TOWORK].m_pipefd[0],(char *)&newconn,sizeof(newconn),0);
+                send(m_process[sub_process].m_pipefd[0],(char *)&newconn,sizeof(newconn),0);
                 printf("send request to child%d\n",curprocess);
             }
-            else if((waitfd==sigpipefd[0])&&(events[i].event&EPOLLIN))
+            else if((waitfd==sigpipefd[0])&&(events[i].events&EPOLLIN))
             {
                 char msgs[1024];
                 int ret=recv(waitfd,msgs,sizeof(msgs),0);
@@ -220,14 +218,14 @@ void processpoll<T>::runparent()
                     {
                         switch(msgs[i])
                         {
-                            case SIG_TERM:
+                            case SIGTERM:
                             {
                             }
-                            case SIGCHILD:
+                            case SIGCHLD:
                             {
                                 pid_t pid;
                                 int state;
-                                if((pid=waitpid(-1,&stat,WNOHANG))!=0)
+                                if((pid=waitpid(-1,&state,WNOHANG))!=0)
                                 {
                                     for(int i=0;i<process_num;++i)
                                     {
@@ -281,7 +279,7 @@ void processpoll<T>::runchild()
     T*users=new T[MAX_USERS];
     while(!m_stop)
     {
-        int number=epoll_wait(epfd,events,MAX_EVENTS);
+        int number=epoll_wait(epfd,events,MAX_EVENTS,-1);
         if(number<0&&errno!=EINTR)
         {
             printf("EPOLL ERROR!\n");
@@ -292,22 +290,22 @@ void processpoll<T>::runchild()
             int fd=events[i].data.fd;
             if(fd==m_process[m_idx].m_pipefd[1])
             {
-                int client
+                int client;
                 int ret=recv(fd,(char *)&client,sizeof(client),0);
                 if(ret<=0&&errno!=EAGAIN)
                 {
                     continue;
                 }
                 struct sockaddr_in clnt_addr;
-                sockaddr_len adr_sz;
-                int connfd=accept(listen_fd,(sockaddr*)&clnt_addr,&adr_sz);
+                socklen_t adr_sz;
+                int connfd=accept(listen_fd,(struct sockaddr*)&clnt_addr,&adr_sz);
                 if(connfd<0)
                 {
                     printf("errno is: %d\n",errno);
                     continue;
                 }
                 addfd(epfd,connfd);
-                users[connfd].init(epfd,connfd,connfd);
+                users[connfd].init(epfd,connfd,clnt_addr);
                 
             }
             else if((fd==sigpipefd[1])&&(events[i].events&EPOLLIN))
@@ -342,13 +340,13 @@ void processpoll<T>::runchild()
                     }
                 }
             }
-            else if(events[i].event&EPOLLIN)
+            else if(events[i].events&EPOLLIN)
             {
                 users[fd].process();
             }
         }
     }
-    close[](users);
+    delete[] users;
     users=NULL;
     close(m_process[m_idx].m_pipefd[1]);
 }
