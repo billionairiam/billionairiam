@@ -12,8 +12,8 @@ typedef struct dictEntry{
   void* key;
   union{
     void* val;
-    uint64_tu64;
-    uint64_ts64;
+    uint64_t u64;
+    uint64_t s64;
   }v;
 }dictEntry;
 
