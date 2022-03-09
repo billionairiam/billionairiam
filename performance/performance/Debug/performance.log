@@ -1,0 +1,44 @@
+﻿  asm-opt.c
+  main.c
+C:\Users\liangma1\source\repos\performance\performance\util.h(30,28): warning C4273: 'fmin': inconsistent dll linkage
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt_math.h(506,47): message : see previous definition of 'fmin'
+C:\Users\liangma1\source\repos\performance\performance\main.c(164,23): warning C4244: 'function': conversion from 'int64_t' to 'int', possible loss of data
+C:\Users\liangma1\source\repos\performance\performance\main.c(169,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(169,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(170,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(170,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(171,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(171,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(172,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(172,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(173,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(173,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(174,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(174,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(175,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(175,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(176,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(176,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(177,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(177,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(178,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(178,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(179,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(179,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(180,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(180,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(181,1): warning C4028: formal parameter 1 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(181,1): warning C4028: formal parameter 2 different from declaration
+C:\Users\liangma1\source\repos\performance\performance\main.c(408,29): warning C4244: '=': conversion from 'time_t' to 'double', possible loss of data
+C:\Users\liangma1\source\repos\performance\performance\main.c(410,28): warning C4244: '=': conversion from 'time_t' to 'double', possible loss of data
+C:\Users\liangma1\source\repos\performance\performance\main.c(414,29): warning C4244: '=': conversion from 'time_t' to 'double', possible loss of data
+C:\Users\liangma1\source\repos\performance\performance\main.c(416,28): warning C4244: '=': conversion from 'time_t' to 'double', possible loss of data
+C:\Users\liangma1\source\repos\performance\performance\main.c(444,33): warning C4244: '=': conversion from 'time_t' to 'double', possible loss of data
+C:\Users\liangma1\source\repos\performance\performance\main.c(446,32): warning C4244: '=': conversion from 'time_t' to 'double', possible loss of data
+C:\Users\liangma1\source\repos\performance\performance\main.c(456,33): warning C4244: '=': conversion from 'time_t' to 'double', possible loss of data
+C:\Users\liangma1\source\repos\performance\performance\main.c(458,32): warning C4244: '=': conversion from 'time_t' to 'double', possible loss of data
+C:\Users\liangma1\source\repos\performance\performance\main.c(381,16): warning C4101: 'xs0': unreferenced local variable
+C:\Users\liangma1\source\repos\performance\performance\main.c(382,16): warning C4101: 'ys0': unreferenced local variable
+  util.c
+  Generating Code...
+  performance.vcxproj -> C:\Users\liangma1\source\repos\performance\Debug\performance.exe
